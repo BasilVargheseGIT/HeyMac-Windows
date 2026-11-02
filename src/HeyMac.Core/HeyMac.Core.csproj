@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RootNamespace>HeyMac.Core</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- ONNX Runtime for running the ArcFace + MiniFASNet models converted from Core ML -->
+    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.17.1" />
+  </ItemGroup>
+
+</Project>

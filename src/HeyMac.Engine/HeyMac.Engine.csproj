@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RootNamespace>HeyMac.Engine</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HeyMac.Core\HeyMac.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- OpenCVSharp4 for camera capture + face detection on Windows -->
+    <PackageReference Include="OpenCVSharp4" Version="4.9.0.20241203" />
+    <PackageReference Include="OpenCVSharp4.runtime.win" Version="4.9.0.20241203" />
+  </ItemGroup>
+
+</Project>

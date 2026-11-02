@@ -1,0 +1,34 @@
+### Visual Studio / .NET
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+*.tmp
+*.log
+*.vs/
+bin/
+obj/
+*.nupkg
+*.nuget.props
+*.nuget.targets
+project.lock.json
+
+### OS
+Thumbs.db
+.DS_Store
+$RECYCLE.BIN/
+
+### Build output
+*.exe
+*.dll
+*.pdb
+*.deps.json
+*.runtimeconfig.json
+*.xml
+
+### Local app data (store + models)
+src/**/bin/**/models/*.onnx
+src/**/bin/**/models/
+
+### Temporary
+*.tmp-*

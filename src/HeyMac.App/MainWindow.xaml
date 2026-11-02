@@ -1,0 +1,121 @@
+<Window x:Class="HeyMac.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Hey Mac — Face Lock for Windows" Height="560" Width="700"
+        WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <TextBlock Text="Hey Mac" FontSize="30" FontWeight="Bold" Foreground="#0071E3"/>
+            <TextBlock Text="Your face is the password" FontSize="14" Foreground="#666" Margin="0,4,0,0"/>
+            <TextBlock Text="Unlock your Windows lock screen with Face ID — 100% on-device." 
+                       FontSize="12" Foreground="#999" Margin="0,8,0,0" TextWrapping="Wrap"/>
+            <Separator Margin="0,12,0,0"/>
+        </StackPanel>
+
+        <!-- Body -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="0,0,0,16">
+
+                <!-- Status -->
+                <GroupBox Header="Status" Margin="0,0,0,16">
+                    <StackPanel Margin="10,8">
+                        <TextBlock x:Name="StatusText" Text="Not enrolled — set up your face to begin" Foreground="#555"/>
+                        <TextBlock x:Name="StatusDetail" Text="" FontSize="11" Foreground="#888" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <!-- Setup -->
+                <GroupBox Header="Face Enrollment" Margin="0,0,0,16">
+                    <StackPanel Margin="10,8">
+                        <TextBlock Text="Look at the camera while we capture several samples. A liveness check "
+                                     "rejects photos, so a picture of you won't enroll." TextWrapping="Wrap"
+                                   Margin="0,0,0,10" FontSize="13"/>
+                        <Button x:Name="EnrollButton" Content="Enroll Face" Style="{StaticResource AccentButton}"
+                                HorizontalAlignment="Left" Margin="0,0,0,10" Click="EnrollButton_Click"/>
+                        <TextBlock x:Name="EnrollProgress" Text="" FontSize="12" Foreground="#0071E3" Margin="0,6,0,0"
+                                   TextWrapping="Wrap"/>
+                        <TextBlock Text="Requires the ArcFace + AntiSpoof ONNX model files (see PORT_GUIDE.md)." 
+                                   FontSize="10" Foreground="#999" Margin="0,8,0,0"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <!-- Password -->
+                <GroupBox Header="Lock Screen Password" Margin="0,0,0,16">
+                    <StackPanel Margin="10,8">
+                        <TextBlock Text="The password typed automatically when your face is verified. Stored encrypted via AES-GCM + DPAPI." 
+                                   TextWrapping="Wrap" Margin="0,0,0,10" FontSize="13"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <PasswordBox x:Name="PasswordBox" Width="260" HorizontalAlignment="Left"
+                                         Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <Button Grid.Column="1" Content="Save" Click="SavePassword_Click" 
+                                    Style="{StaticResource AccentButton}" Padding="10,4,12,4"/>
+                        </Grid>
+                        <TextBlock x:Name="PasswordStatus" Text="" FontSize="12" Foreground="#0071E3" Margin="0,8,0,0"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <!-- Lock screen unlock -->
+                <GroupBox Header="Lock Screen Auto-Unlock" Margin="0,0,0,16">
+                    <StackPanel Margin="10,8">
+                        <CheckBox x:Name="EnableUnlockCheck" Content="Automatically type my password when I'm verified at the lock screen"
+                                  Margin="0,0,0,8"/>
+                        <Button x:Name="TestButton" Content="Test Face Verification" 
+                                HorizontalAlignment="Left" Margin="0,8,0,0" Click="TestButton_Click"/>
+                        <TextBlock x:Name="TestResult" Text="" FontSize="12" Margin="0,8,0,0" TextWrapping="Wrap"/>
+                        <TextBlock Text="NOTE: Reaching the actual Windows secure desktop requires the app to run with "
+                                     "logon-desktop access (scheduled task / service). See PORT_GUIDE.md." 
+                                   FontSize="10" Foreground="#999" Margin="0,8,0,0" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <!-- App Lock -->
+                <GroupBox Header="App Lock" Margin="0,0,0,16">
+                    <StackPanel Margin="10,8">
+                        <TextBlock Text="Shield sensitive apps (e.g. WhatsApp, Signal, Mail) with a blur overlay "
+                                     "until your face is verified. App-lock settings are stored encrypted." 
+                                   TextWrapping="Wrap" Margin="0,0,0,10" FontSize="13"/>
+                        <Grid Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="AppLockProcessBox" PlaceholderText="process name (e.g. whatsapp)" 
+                                     VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <ComboBox x:Name="AppLockModeBox" VerticalAlignment="Center" Margin="0,0,6,0"
+                                      SelectedIndex="0">
+                                <ComboBoxItem Content="Blur window only"/>
+                                <ComboBoxItem Content="Blur entire display"/>
+                            </ComboBox>
+                            <Button Grid.Column="2" Content="Add" Click="AddAppLock_Click" 
+                                    Style="{StaticResource AccentButton}" Padding="10,4,12,4"/>
+                        </Grid>
+                        <ListBox x:Name="AppLockList" Height="140" Margin="0,0,0,8"/>
+                        <Button x:Name="StartAppLockButton" Content="Start App Lock Watcher" 
+                                HorizontalAlignment="Left" Margin="0,0,0,8" Click="StartAppLockButton_Click"/>
+                        <TextBlock x:Name="AppLockStatus" Text="" FontSize="12" Foreground="#0071E3" 
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </GroupBox>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Footer -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,16,0,0">
+            <TextBlock Text="Hey Mac — unofficial Windows port. Not affiliated with the original macOS app." 
+                       FontSize="10" Foreground="#999"/>
+        </StackPanel>
+    </Grid>
+</Window>

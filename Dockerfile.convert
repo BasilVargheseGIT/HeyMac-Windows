@@ -1,0 +1,36 @@
+# Dockerfile — converts HeyMac's Core ML models (.mlmodel) to ONNX for the Windows port.
+#
+# HeyMac ships two Core ML model packages under Sources/HeyMacCore/Resources/:
+#   ArcFace.mlpkgdata   (w600k_mbf embedding)
+#   AntiSpoof.mlpkgdata (MiniFASNetV2 liveness)
+#
+# This image installs coremltools + onnx and exposes a conversion script.
+#
+# Build:
+#   docker build -t heymac-model-convert -f Dockerfile.convert .
+#
+# Run (mount the HeyMac repo checkout):
+#   docker run --rm -v C:\path\to\HeyMac:/src/heymac \
+#       heymac-model-convert \
+#       /src/heymac/Sources/HeyMacCore/Resources \
+#       /out
+#
+# Output: arcface.onnx, antispoof.onnx in /out. Copy them into the Windows app's
+# models folder (see PORT_GUIDE.md).
+
+FROM python:3.11-slim
+
+WORKDIR /workspace
+
+# coremltools needs numpy/scipy; pin compatible versions.
+RUN pip install --no-cache-dir \
+        coremltools==7.1 \
+        onnx==1.16.1 \
+        onnxruntime==1.17.1 \
+        numpy<2.0
+
+# Copy the conversion helper.
+COPY convert_models.py /workspace/convert_models.py
+
+ENTRYPOINT ["python", "/workspace/convert_models.py"]
+CMD ["/src/heymac/Sources/HeyMacCore/Resources", "/out"]
